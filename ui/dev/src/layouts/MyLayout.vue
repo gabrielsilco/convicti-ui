@@ -16,22 +16,22 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left">
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" :width="280">
       <!-- drawer content -->
       <div class="drawer-content">
-        <img class="q-pa-xl drawer-logo" src="../assets/images/r_footer-logo.webp" alt="">
+        <img class="drawer-logo" src="../assets/images/r_footer-logo.webp" alt="">
         <div class="drawer-menu">
-          <h2>MENU</h2>
-          <q-btn color="primary">
+          <h2 class="menu-header">MENU</h2>
+          <q-btn align="left">
             <img class="base-logo" src="../assets/icons/building.svg" alt="">
-            <span>Empresas</span>
+            <span class="btn-label">Empresas</span>
           </q-btn>
         </div>
 
         <div class="drawer-footer">
-          <q-btn flat color="primary">
+          <q-btn flat>
             <img class="base-logo" src="../assets/icons/power.svg" alt="">
-            <span>Sair</span>
+            <span class="logout-label">Sair</span>
           </q-btn>
         </div>
         
@@ -72,13 +72,14 @@ export default {
 .drawer-content {
   background-color: #0E044A;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  padding-left: 34px;
+  padding-right: 34px;
+  padding-top: 56px;
+
 }
 
 .drawer-logo {
-  width: 80%;;
+  width: 100%;
 }
 
 .base-logo {
@@ -86,12 +87,49 @@ export default {
   width: 24px;
 }
 
-.drawer-footer {
+.drawer-menu {
   width: 100%;
+  padding-top: 128px;
+}
+
+.menu-header {
+  font-size: 16px;
+  color: white;
+  font-weight: 500;
+  padding: 0;
+  margin: 0 0 12px 0;
+  line-height: 1.6rem;
+  letter-spacing: 2.2px;
+}
+
+.drawer-menu .q-btn {
+  width: 100%;
+  padding-left: 24px;
+  background-color: #fff;
+}
+
+.btn-label {
+  text-transform: none;
+  margin-left: 18px;
+  line-height: 1.2px;
+  font-weight: 600;
+  color: #0E044A;
+}
+
+.drawer-footer {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: start;
   position: absolute;
   bottom: 0;
+  margin-bottom: 18px;
+}
+
+.logout-label {
+  color: #fff;
+  text-transform: none;
+  font-size: 18px;
+  margin-left: 16px;
+  line-height: 2rem;
 }
 </style>
