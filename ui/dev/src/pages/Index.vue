@@ -24,7 +24,7 @@
           </q-item>
         </template>
       </q-select>
-      <q-btn unelevated>
+      <q-btn unelevated @click="openAddCompanyDrawer">
         <span class="add-company__label">Adicionar Empresa</span>
         <q-icon class="q-ml-md" color="primary" name="add" />
       </q-btn>
@@ -33,12 +33,11 @@
 </template>
 
 <script>
-import pages from '../router/pages'
 
 export default {
-  setup () {
-    return {
-      pages
+  methods: {
+    openAddCompanyDrawer() {
+      this.$emit('openAddCompanyDrawer')
     }
   }
 }

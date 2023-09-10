@@ -6,7 +6,7 @@
       </q-toolbar>
     </q-header> -->
 
-    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" :width="280">
+    <q-drawer show-if-above side="left" :width="280">
       <!-- drawer content -->
       <div class="drawer-content">
         <img class="drawer-logo" src="../assets/images/r_footer-logo.webp" alt="">
@@ -29,30 +29,135 @@
       </div>
     </q-drawer>
 
-    <q-drawer v-model="rightDrawerOpen" side="right" overlay>
-      <!-- drawer content -->
+    <q-drawer v-model="rightDrawerOpen" side="right" overlay :width="700">
+      <q-form class="q-px-lg">
+        <h2 class="form-title">Cadastrar Empresa</h2>
+        <div class="form-grid">
+          <q-input
+            filled
+            v-model="companyName"
+            label="Nome"
+            stack-label
+            :dense="dense"
+            style="grid-column: 1 / 3;"
+          />
+          <q-input
+            filled
+            v-model="observation"
+            label="Observação"
+            stack-label
+            :dense="dense"
+          />
+          <q-input
+            filled
+            v-model="cnpj"
+            label="CNPJ"
+            stack-label
+            :dense="dense"
+            style="grid-column: 1 / 3;"
+          />
+          <q-select
+            filled
+            v-model="category"
+            :options="categories"
+            label="Categoria"
+            stack-label
+            :dense="dense"
+          />
+          <q-input
+            filled
+            v-model="email"
+            label="E-mail"
+            stack-label
+            :dense="dense"
+            style="grid-column: 1 / 3;"
+          />
+          <q-input
+            filled
+            v-model="whatsapp"
+            label="Whatsapp"
+            stack-label
+            :dense="dense"
+            style="grid-column: 1 / 3;"
+          />
+          <q-input
+            filled
+            v-model="representative"
+            label="Representante"
+            stack-label
+            :dense="dense"
+            style="grid-column: 1 / 3;"
+          />
+          <q-input
+            filled
+            v-model="latitude"
+            label="Latitude"
+            stack-label
+            :dense="dense"
+            style="grid-column: 1;"
+          />
+          <q-input
+            filled
+            v-model="longitude"
+            label="Longitude"
+            stack-label
+            :dense="dense"
+          />
+          <q-select
+            filled
+            v-model="state"
+            :options="states"
+            label="Estado"
+            stack-label
+            :dense="dense"
+            style="grid-column: 1;"
+          />
+          <q-select
+            filled
+            v-model="city"
+            :options="cities"
+            label="Cidade"
+            stack-label
+            :dense="dense"
+          />
+        </div>
+        <div class="form-actions">
+          <q-btn unelevated class="cancel-button" @click="rightDrawerOpen = false">
+            <span class="cancel-button__label">Cancelar</span>
+          </q-btn>
+          <q-btn unelevated class="register-button">
+            <span class="register-button__label">Cadastrar Empresa</span>
+          </q-btn>
+        </div>
+      </q-form>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view @openAddCompanyDrawer="rightDrawerOpen = !rightDrawerOpen" />
     </q-page-container>
 
   </q-layout>
 </template>
 
 <script>
-import { ref } from 'vue'
 
 export default {
   name: 'MyLayout',
-  setup () {
-    const rightDrawerOpen = ref(false)
-
+  data() {
     return {
-      rightDrawerOpen,
-      toggleRightDrawer () {
-        rightDrawerOpen.value = !rightDrawerOpen.value
-      }
+      rightDrawerOpen: false,
+      companyName: '',
+      observation: '',
+      cnpj: '',
+      category: '',
+      categories: [],
+      email: '',
+      whatsapp: '',
+      representative: '',
+      latitude: '',
+      longitude: '',
+      state: '',
+      states: []
     }
   }
 }
@@ -122,4 +227,48 @@ export default {
   margin-left: 16px;
   line-height: 2rem;
 }
+
+.form-title {
+  font-size: 32px;
+  text-transform: none;
+  color: #0e044a;
+  font-weight: 600;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  grid-gap:20px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+
+  margin-top: 64px;
+}
+
+.cancel-button {
+  background-color: #e0e5f8;
+}
+
+.cancel-button__label {
+  text-transform: none;
+  color: #0e044a;
+  letter-spacing: .8px;
+  line-height: 0;
+}
+
+.register-button {
+  background-color: #0e044a;
+}
+
+.register-button__label {
+  text-transform: none;
+  color: #e0e5f8;
+  letter-spacing: .8px;
+  line-height: 0;
+}
+
 </style>
