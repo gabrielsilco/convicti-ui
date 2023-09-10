@@ -58,6 +58,8 @@
     "last 4 iOS versions"
   ],
   "dependencies": {
-    "@flaticon/flaticon-uicons": "^2.4.0"
+    "@flaticon/flaticon-uicons": "^2.4.0",
+    "axios": "^1.5.0",
+    "ol": "^8.1.0"
   }
 }

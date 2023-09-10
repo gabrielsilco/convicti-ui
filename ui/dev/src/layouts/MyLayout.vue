@@ -38,7 +38,6 @@
             v-model="companyName"
             label="Nome"
             stack-label
-            :dense="dense"
             style="grid-column: 1 / 3;"
           />
           <q-input
@@ -46,15 +45,14 @@
             v-model="observation"
             label="Observação"
             stack-label
-            :dense="dense"
           />
           <q-input
             filled
             v-model="cnpj"
             label="CNPJ"
             stack-label
-            :dense="dense"
             style="grid-column: 1 / 3;"
+            :rules="[ val => val.length === 14 || 'O CNPJ deve ser informado um total de 14 dígitos!']"
           />
           <q-select
             filled
@@ -62,14 +60,14 @@
             :options="categories"
             label="Categoria"
             stack-label
-            :dense="dense"
+            option-label="name"
+            option-value="id"
           />
           <q-input
             filled
             v-model="email"
             label="E-mail"
             stack-label
-            :dense="dense"
             style="grid-column: 1 / 3;"
           />
           <q-input
@@ -77,31 +75,30 @@
             v-model="whatsapp"
             label="Whatsapp"
             stack-label
-            :dense="dense"
             style="grid-column: 1 / 3;"
+            :rules="[ val => val.length === 11 || 'O campo whatsapp deve ser informado uma quantidade de 11 caracteres (DD + Número de Telefone).']"
           />
           <q-input
             filled
             v-model="representative"
             label="Representante"
             stack-label
-            :dense="dense"
             style="grid-column: 1 / 3;"
           />
           <q-input
             filled
             v-model="latitude"
+            type="number"
             label="Latitude"
             stack-label
-            :dense="dense"
             style="grid-column: 1;"
           />
           <q-input
             filled
             v-model="longitude"
+            type="number"
             label="Longitude"
             stack-label
-            :dense="dense"
           />
           <q-select
             filled
@@ -109,8 +106,10 @@
             :options="states"
             label="Estado"
             stack-label
-            :dense="dense"
+            option-label="title"
+            option-value="id"
             style="grid-column: 1;"
+            @update:model-value="selectState"
           />
           <q-select
             filled
@@ -118,19 +117,32 @@
             :options="cities"
             label="Cidade"
             stack-label
-            :dense="dense"
+            option-label="title"
+            option-value="id"
           />
         </div>
         <div class="form-actions">
           <q-btn unelevated class="cancel-button" @click="rightDrawerOpen = false">
             <span class="cancel-button__label">Cancelar</span>
           </q-btn>
-          <q-btn unelevated class="register-button">
+          <q-btn unelevated class="register-button" @click="registerCompany" :loading="loadingRegistration">
             <span class="register-button__label">Cadastrar Empresa</span>
           </q-btn>
         </div>
       </q-form>
     </q-drawer>
+
+    <q-dialog v-model="confirmRegistration">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Empresa cadastrada com sucesso</div>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="OK" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
     <q-page-container>
       <router-view @openAddCompanyDrawer="rightDrawerOpen = !rightDrawerOpen" />
@@ -140,6 +152,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 
 export default {
   name: 'MyLayout',
@@ -156,9 +169,45 @@ export default {
       representative: '',
       latitude: '',
       longitude: '',
-      state: '',
-      states: []
+      state: null,
+      states: [],
+      city: null,
+      cities: [],
+      confirmRegistration: false,
+      loadingRegistration: false,
     }
+  },
+  methods: {
+    async selectState(value) {
+      const result = await axios.get(`http://localhost:8080/api/state-cities/cities?state_id=${value.id}`);
+      this.cities = result.data;
+    },
+    async registerCompany() {
+      this.loadingRegistration = true;
+      const result = await axios.post('http://localhost:8080/api/companies', {
+        name: this.companyName,
+        city_id: this.city.id,
+        cnpj: this.cnpj,
+        email: this.email,
+        state_id: this.state.id,
+        category_id: this.category.id,
+        latitude: this.latitude,
+        longitude: this.longitude,
+        whatsapp_phone: this.whatsapp,
+        representantive_user: this.representative,   
+      })
+      if (result.status === 200 || result.statusText === 'OK') {
+        this.rightDrawerOpen = false;
+        this.confirmRegistration = true;
+      }
+      this.loadingRegistration = false;
+    },
+  },
+  async created() {
+    const states = await axios.get('http://localhost:8080/api/state-cities/states')
+    this.states = states.data;
+    const categories = await axios.get('http://localhost:8080/api/categories');
+    this.categories = categories.data;
   }
 }
 </script>
