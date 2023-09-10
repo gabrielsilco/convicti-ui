@@ -3,14 +3,15 @@
     <header class="index-header">
       <q-select
         filled
-        v-model="model"
+        v-model="selectedCompany"
         use-input
         hide-selected
         fill-input
         input-debounce="0"
         placeholder="Pesquisar"
-        :options="options"
-        @filter="filterFn"
+        :options="companies"
+        option-label="name"
+        option-value="id"
         style="width: 450px;"
       >
         <template v-slot:prepend>
@@ -23,6 +24,14 @@
             </q-item-section>
           </q-item>
         </template>
+        <template v-slot:option="scope">
+          <q-item v-bind="scope.itemProps">
+            <q-item-section>
+              <q-item-label>{{ scope.opt.name }}</q-item-label>
+              <q-item-label caption>{{ scope.opt.representantive_user }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
       </q-select>
       <q-btn unelevated @click="openAddCompanyDrawer">
         <span class="add-company__label">Adicionar Empresa</span>
@@ -30,7 +39,7 @@
       </q-btn>
     </header>
     <div class="map-container">
-      <div id="map" style="width: 100%; height: 600px"></div>
+      <div id="map" style="width: 100%; height: 600px" @point-clicked="selectCompany"></div>
     </div>
   </q-page>
 </template>
@@ -38,6 +47,7 @@
 <script>
 import axios from 'axios';
 
+import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -53,12 +63,13 @@ export default {
     return {
       companies: [],
       coordinatesArray: [],
+      selectedCompany: '',
     }
   },
   methods: {
     openAddCompanyDrawer() {
       this.$emit('openAddCompanyDrawer')
-    }
+    },
   },
   async mounted() {
     const companies = await axios.get('http://localhost:8080/api/companies');
@@ -66,7 +77,6 @@ export default {
     this.coordinatesArray = this.companies.map(company => {
       return [company.longitude, company.latitude]
     })
-    console.log(this.coordinatesArray)
 
     const map = new Map({
       target: 'map',
@@ -74,7 +84,6 @@ export default {
         new TileLayer({
           source: new OSM(),
         }),
-        // Add a vector layer for points
         new VectorLayer({
           source: new VectorSource(),
         }),
@@ -85,22 +94,13 @@ export default {
       }),
     });
 
-    // Function to add points to the map
     const addPoint = (coordinates) => {
-      const vectorSource = map.getLayers().item(1).getSource(); // Get the vector source
-      const point = new Point(fromLonLat(coordinates)); // Convert coordinates to the map's projection
+      const vectorSource = map.getLayers().item(1).getSource();
+      const point = new Point(fromLonLat(coordinates));
       const feature = new Feature(point);
+
       vectorSource.addFeature(feature);
     };
-
-    // Example: Add points based on coordinates
-    const coordinatesArray = [
-      ["-34.87696400", "-8.04756300"], // Example coordinates, replace with your own
-      // [10, 10], // Example coordinates, replace with your own
-      // Add more coordinates as needed
-    ];
-
-    await console.log(this.coordinatesArray)
 
     this.coordinatesArray.forEach((coordinates) => {
       addPoint(coordinates);
