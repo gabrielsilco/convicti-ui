@@ -1,22 +1,34 @@
 <template>
-  <q-page padding class="row justify-center">
-    <q-list dense class="list">
-      <q-item
-        v-for="page in pages"
-        :key="page.path"
-        :to="page.path"
+  <q-page class="q-pa-md">
+    <header class="index-header">
+      <q-select
+        filled
+        v-model="model"
+        use-input
+        hide-selected
+        fill-input
+        input-debounce="0"
+        placeholder="Pesquisar"
+        :options="options"
+        @filter="filterFn"
+        style="width: 450px;"
       >
-        <q-item-section avatar>
-          <q-icon name="pages" />
-        </q-item-section>
-        <q-item-section>
-          {{ page.title }}
-        </q-item-section>
-        <q-item-section side>
-          <q-icon name="chevron_right" />
-        </q-item-section>
-      </q-item>
-    </q-list>
+        <template v-slot:prepend>
+          <q-icon name="search" />
+        </template>
+        <template v-slot:no-option>
+          <q-item>
+            <q-item-section class="text-grey">
+              No results
+            </q-item-section>
+          </q-item>
+        </template>
+      </q-select>
+      <q-btn unelevated>
+        <span class="add-company__label">Adicionar Empresa</span>
+        <q-icon class="q-ml-md" color="primary" name="add" />
+      </q-btn>
+    </header>
   </q-page>
 </template>
 
@@ -33,7 +45,23 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-.list
-  width: 700px
-  max-width: 100%
+.index-header
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+
+.q-page
+  background-color: #f6f9fa
+
+.q-field__inner
+  background-color: #fff !important
+.q-btn
+  background-color: #e0e5f8
+
+.add-company__label
+  text-transform: none
+  color: #0e044a
+  font-weight: 600
+  letter-spacing: .8px
+  line-height: 0
 </style>

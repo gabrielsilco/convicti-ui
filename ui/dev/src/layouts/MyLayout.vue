@@ -1,20 +1,10 @@
 <template>
   <q-layout view="lHr lpR lFr">
 
-    <q-header class="bg-primary text-white">
+    <!-- <q-header class="bg-primary text-white">
       <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
-          </q-avatar>
-          Title
-        </q-toolbar-title>
-
-        <q-btn dense flat round icon="menu" @click="toggleRightDrawer" />
       </q-toolbar>
-    </q-header>
+    </q-header> -->
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" :width="280">
       <!-- drawer content -->
@@ -119,7 +109,7 @@ export default {
 .drawer-footer {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: flex-start;
   position: absolute;
   bottom: 0;
   margin-bottom: 18px;
