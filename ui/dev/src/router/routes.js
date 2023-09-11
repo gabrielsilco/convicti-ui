@@ -7,6 +7,13 @@ const children = pages.map(page => ({
 
 const routes = [
   {
+    path: '/auth',
+    component: () => import('layouts/Auth.vue'),
+    children: [
+      { path: '/auth', component: () => import('pages/Auth.vue') }
+    ].concat(children)
+  },
+  {
     path: '/',
     component: () => import('layouts/MyLayout.vue'),
     children: [

@@ -1,10 +1,6 @@
 <template>
   <q-layout view="lHr lpR lFr">
 
-    <!-- <q-header class="bg-primary text-white">
-      <q-toolbar>
-      </q-toolbar>
-    </q-header> -->
 
     <q-drawer show-if-above side="left" :width="280">
       <!-- drawer content -->
@@ -19,7 +15,7 @@
         </div>
 
         <div class="drawer-footer">
-          <q-btn flat>
+          <q-btn flat @click="logout">
             <img class="base-logo" src="../assets/icons/power.svg" alt="">
             <span class="logout-label">Sair</span>
           </q-btn>
@@ -202,8 +198,16 @@ export default {
       }
       this.loadingRegistration = false;
     },
+    logout() {
+      localStorage.removeItem('auth_token');
+      this.$router.push('/auth')
+    }
   },
   async created() {
+    if (!localStorage.getItem('auth_token')) {
+      this.$router.push('/auth');
+      return
+    }
     const states = await axios.get('http://localhost:8080/api/state-cities/states')
     this.states = states.data;
     const categories = await axios.get('http://localhost:8080/api/categories');
